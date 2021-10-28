@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
+  m_Name: ModConfig
+  m_EditorClassIdentifier: 
+  id: qkSteamSelector
+  title: Steam Selector
+  author: Qkrisi
+  description: 'Yeah, that''s right. Everyone''s favourite module just got a sequel.
+
+
+    Answer 3 questions based on your Steam friends, achievements or messages.
+
+
+    Module made for KTaNE Modding Jam #2.
+
+
+    Module ID: qkSteamSelector'
+  version: 1.0
+  outputFolder: /home/qkrisi/.steam/steam/steamapps/common/Keep Talking and Nobody
+    Explodes/mods
+  previewImage: {fileID: 2800000, guid: 43881623f00774a5aa6e98eb4afd2439, type: 3}

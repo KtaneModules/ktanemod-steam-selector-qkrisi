@@ -1,0 +1,10 @@
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/bin/Debug/SteamSelectorAssembly.dll
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/bin/Debug/SteamSelectorAssembly.pdb
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/bin/Debug/Newtonsoft.Json.dll
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/obj/Debug/SteamSelectorAssembly.csprojAssemblyReference.cache
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/obj/Debug/SteamSelectorAssembly.AssemblyInfoInputs.cache
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/obj/Debug/SteamSelectorAssembly.AssemblyInfo.cs
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/obj/Debug/SteamSelectorAssembly.csproj.CoreCompileInputs.cache
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/obj/Debug/SteamSelectorAssembly.csproj.CopyComplete
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/obj/Debug/SteamSelectorAssembly.dll
+/home/qkrisi/Desktop/GitHub Cloned/SteamSelector/SteamSelectorAssembly/obj/Debug/SteamSelectorAssembly.pdb
