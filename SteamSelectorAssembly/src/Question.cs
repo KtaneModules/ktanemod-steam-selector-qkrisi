@@ -111,7 +111,7 @@ namespace SteamSelector
         protected readonly qkSteamSelector Module;
         protected readonly qkSteamSelectorService Service;
 
-        public Question(TextMesh display_text, TextMesh input_text, qkSteamSelector module)
+        protected Question(TextMesh display_text, TextMesh input_text, qkSteamSelector module)
         {
             Display = display_text;
             Input = input_text;

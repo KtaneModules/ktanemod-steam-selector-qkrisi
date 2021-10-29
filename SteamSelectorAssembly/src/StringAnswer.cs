@@ -15,8 +15,7 @@ namespace SteamSelector
         private bool enable_avatar;
         private bool enable_extras;
         private bool write_extras;
-        private List<SteamMessage> messages = new List<SteamMessage>();
-        
+
         private List<int> Options = new List<int>() { 1 };
 
         private readonly Renderer QuestionAvatar;
@@ -139,6 +138,8 @@ namespace SteamSelector
                     }
                     break;
                 case 3:     //Messages
+                    var messages = Service.Messages.ToList();
+                    messages.Reverse();
                     int ind;
                     string message;
                     string user;
@@ -235,10 +236,8 @@ namespace SteamSelector
             }
             string _;
             string __;
-            messages = Service.Messages.Where(msg => ModifyMessage(msg, out _, out __)).ToList();
-            if (messages.Count > 0)
+            if (Service.Messages.Any(msg => ModifyMessage(msg, out _, out __)))
             {
-                messages.Reverse();
                 Options.Add(3);
                 Options.Add(3);
             }
