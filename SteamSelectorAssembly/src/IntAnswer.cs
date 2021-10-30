@@ -66,7 +66,7 @@ namespace SteamSelector
                         CurrentQuestion = "On which day have you unlocked\n" + AchievementName;
                         Answer = UnlockDate.Day;
                         Min = 1;
-                        Max = 32;
+                        Max = 31;
                         break;
                     case 4:     //Hour
                         CurrentQuestion = "When have you unlocked\n" + AchievementName + " (hour)";
