@@ -8,7 +8,7 @@ namespace SteamSelector
 {
     public static class TextMeshUtils
     {
-        private const float WaitTime = 0.045f;
+        public const float WaitTime = 0.045f;
         
         private enum Modifier
         {

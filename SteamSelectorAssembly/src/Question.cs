@@ -35,7 +35,7 @@ namespace SteamSelector
         }
 
         public abstract void Cycle(int increment);
-        protected abstract void WriteAnswer();
+        protected abstract void WriteAnswer(bool override_wait = true);
 
         protected string CurrentQuestion;
 
@@ -103,7 +103,7 @@ namespace SteamSelector
                 }
             }
             question_cache = modified;
-            Module.StartCoroutine(TextMeshUtils.WriteText(Display, modified, WriteAnswer, false));
+            Module.StartCoroutine(TextMeshUtils.WriteText(Display, modified, () => WriteAnswer(false), false));
         }
 
         protected readonly TextMesh Display;

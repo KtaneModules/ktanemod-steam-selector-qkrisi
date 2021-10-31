@@ -42,7 +42,7 @@ namespace SteamSelector
             }
         }
 
-        protected override void WriteAnswer()
+        protected override void WriteAnswer(bool override_wait = true)
         {
             QuestionAvatar.enabled = enable_avatar;
             if (write_extras)
@@ -50,7 +50,9 @@ namespace SteamSelector
                 Module.flashing = enable_extras;
                 write_extras = false;
             }
-            Module.StartCoroutine(TextMeshUtils.WriteText(Input, Current, EnableButtons, true));
+
+            Module.StartCoroutine(TextMeshUtils.WriteText(Input, Current, EnableButtons, true,
+                override_wait && Module.settings.FastInputAnimation ? 0f : TextMeshUtils.WaitTime));
         }
 
         public override void Generate()

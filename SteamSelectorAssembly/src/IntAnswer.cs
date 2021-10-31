@@ -31,9 +31,10 @@ namespace SteamSelector
             }
         }
 
-        protected override void WriteAnswer()
+        protected override void WriteAnswer(bool override_wait = true)
         {
-            Module.StartCoroutine(TextMeshUtils.WriteText(Input, CurrentAnswer.ToString(), EnableButtons, true));
+            Module.StartCoroutine(TextMeshUtils.WriteText(Input, CurrentAnswer.ToString(), EnableButtons, true,
+                override_wait && Module.settings.FastInputAnimation ? 0f : TextMeshUtils.WaitTime));
         }
 
         public override void Generate()

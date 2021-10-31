@@ -21,6 +21,7 @@ public class qkSteamSelectorService : MonoBehaviour
     {
         Instance = this;
         initialized = SteamAPI.Init();
+        ModConfigHelper.ReadConfig<qkSteamSelector.SteamSelectorSettings>(qkSteamSelector.SettingsFile);        //Create settings
     }
 
     internal bool initialized;

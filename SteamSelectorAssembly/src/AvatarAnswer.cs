@@ -30,7 +30,7 @@ namespace SteamSelector
             }
         }
         
-        protected override void WriteAnswer()
+        protected override void WriteAnswer(bool override_wait = true)
         {
             AnswerCube.material.mainTexture = CurrentAvatar.AvatarTexture;
             AnswerCube.enabled = true;

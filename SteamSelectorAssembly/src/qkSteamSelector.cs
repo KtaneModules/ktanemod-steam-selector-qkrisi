@@ -8,6 +8,11 @@ using RND = UnityEngine.Random;
 public class qkSteamSelector : MonoBehaviour
 {
     #pragma warning disable 649
+    internal class SteamSelectorSettings
+    {
+        public bool FastInputAnimation = true;
+    }
+    
     [SerializeField] private TextMesh DisplayText;
     [SerializeField] private TextMesh InputText;
     [SerializeField] private KMBombModule Module;
@@ -22,6 +27,9 @@ public class qkSteamSelector : MonoBehaviour
     [SerializeField] private KMSelectable ExtrasButton;
     [SerializeField] private TextMesh ExtrasText;
     #pragma warning restore 649
+
+    internal const string SettingsFile = "SteamSelector.json";
+    internal SteamSelectorSettings settings;
     
     private int ModuleID;
     private static int ModuleIDCounter;
@@ -52,6 +60,7 @@ public class qkSteamSelector : MonoBehaviour
     void Awake()
     {
         ModuleIDCounter = 0;
+        settings = ModConfigHelper.ReadConfig<SteamSelectorSettings>(SettingsFile);
         if(!Application.isEditor)
             DeactivateErrorScreen();
     }
@@ -181,4 +190,25 @@ public class qkSteamSelector : MonoBehaviour
             yield return null;
         }
     }
+    
+    #pragma warning disable 414
+    public static Dictionary<string, object>[] TweaksEditorSettings =
+    {
+        new Dictionary<string, object>
+        {
+            {"Filename", SettingsFile},
+            {"Name", "Steam Selector"},
+            {
+                "Listings", new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        {"Key", "FastInputAnimation"}, {"Text", "Fast input animation"},
+                        {"Description", "Enabling this setting makes scrolling through the answers is faster."}
+                    },
+                }
+            }
+        }
+    };
+    #pragma warning restore 414
 }
