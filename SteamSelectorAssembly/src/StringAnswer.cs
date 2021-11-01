@@ -95,7 +95,7 @@ namespace SteamSelector
                                 enable_extras = true;
                                 write_extras = true;
                                 List<string> screens = new List<string>();
-                                string screen = "Exlude the following users:";
+                                string screen = "Exclude the following users:";
                                 int rows = 1;
                                 foreach (var no_level in no_levels)
                                 {
@@ -135,6 +135,7 @@ namespace SteamSelector
                             CurrentQuestion = String.Format(
                                 "What is the {0} letter/digit of the {1} person on your list of Steam friends sorted alphabetically? ({2})",
                                 GetStringByNum(letter + 1), GetStringByNum(index + 1), reverse ? "Z-A" : "A-Z");
+                            Module.Log("Person in question: {0}", name);
                             Answers = new[] { name[letter].ToString().ToUpperInvariant() };
                         }
                     }
