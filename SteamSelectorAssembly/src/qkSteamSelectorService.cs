@@ -36,7 +36,7 @@ public class qkSteamSelectorService : MonoBehaviour
         { "allchallenging", "Challenge Accepted" },
         { "allextreme", "To the Extreme!" },
         { "allexotic", "Seasoned Traveller" },
-        { "disarmedeachmodule", "Experience is the Best Teacher" },
+        { "disarmeachmodule", "Experience is the Best Teacher" },
         { "100modulesdisarmed", "Trust the Expert" },
         { "100defused", "Bomb Squad" }
     };
