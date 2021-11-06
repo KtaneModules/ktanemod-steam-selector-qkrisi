@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Steamworks;
 using UnityEngine;
 
@@ -23,13 +24,40 @@ namespace SteamSelector
             }
         }
     }
+
+    internal enum SteamFriendState
+    {
+        Offline,
+        Online,
+        Away
+    }
     
     internal class SteamFriend
     {
+        private const ulong KtaneID = 341800;
+        
         internal string Name { get; private set; }
         internal int Level { get; private set; }
         internal SteamAvatar Avatar { get; private set; }
+        private CGameID? PlayedGame;
 
+        internal bool IsPlayingKtane => PlayedGame?.m_GameID == KtaneID;
+
+        private static readonly Dictionary<EPersonaState, SteamFriendState> StateConversions =
+            new Dictionary<EPersonaState, SteamFriendState>
+            {
+                { EPersonaState.k_EPersonaStateOffline, SteamFriendState.Offline },
+                { EPersonaState.k_EPersonaStateOnline, SteamFriendState.Online },
+                { EPersonaState.k_EPersonaStateBusy, SteamFriendState.Online },
+                { EPersonaState.k_EPersonaStateAway, SteamFriendState.Away },
+                { EPersonaState.k_EPersonaStateSnooze, SteamFriendState.Away },
+                { EPersonaState.k_EPersonaStateLookingToPlay, SteamFriendState.Online },
+                { EPersonaState.k_EPersonaStateLookingToTrade, SteamFriendState.Online },
+                { EPersonaState.k_EPersonaStateMax, SteamFriendState.Online }
+            };
+        
+        internal SteamFriendState CurrentState => StateConversions[SteamFriends.GetFriendPersonaState(ID)];
+        
         private readonly CSteamID ID;
         
         internal void HandleChange(EPersonaChange Change)
@@ -40,17 +68,28 @@ namespace SteamSelector
                 Level = SteamFriends.GetFriendSteamLevel(ID);
             if (Change.HasFlag(EPersonaChange.k_EPersonaChangeAvatar))
             {
+               
                 int avatar_hanndle = SteamFriends.GetMediumFriendAvatar(ID);
                 if(avatar_hanndle != 0)
                     Avatar = new SteamAvatar(avatar_hanndle, Name);
             }
+            if (Change.HasFlag(EPersonaChange.k_EPersonaChangeGamePlayed) || Change.HasFlag(EPersonaChange.k_EPersonaChangeComeOnline))
+            {
+                FriendGameInfo_t game_info;
+                bool playing = SteamFriends.GetFriendGamePlayed(ID, out game_info);
+                if (!playing)
+                    PlayedGame = null;
+                else PlayedGame = game_info.m_gameID;
+            }
+            if (Change.HasFlag(EPersonaChange.k_EPersonaChangeGoneOffline))
+                PlayedGame = null;
         }
         
         internal SteamFriend(CSteamID FriendID)
         {
             ID = FriendID;
             HandleChange(EPersonaChange.k_EPersonaChangeName | EPersonaChange.k_EPersonaChangeSteamLevel |
-                         EPersonaChange.k_EPersonaChangeAvatar);
+                         EPersonaChange.k_EPersonaChangeAvatar | EPersonaChange.k_EPersonaChangeGamePlayed);
         }
     }
 

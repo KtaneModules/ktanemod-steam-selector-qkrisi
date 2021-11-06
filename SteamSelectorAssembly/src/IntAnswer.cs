@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using Steamworks;
 using UnityEngine;
+using Random = System.Random;
 using RND = UnityEngine.Random;
 
 namespace SteamSelector
@@ -9,6 +11,7 @@ namespace SteamSelector
     {
         private int CurrentAnswer;
         private int Answer;
+        private Func<int> CalculateOnSubmit;
 
         private int? Min;
         private int? Max;
@@ -19,7 +22,13 @@ namespace SteamSelector
         {
             get
             {
-                return CurrentAnswer == Answer;
+                int ans = Answer;
+                if (CalculateOnSubmit != null)
+                {
+                    ans = CalculateOnSubmit();
+                    Module.Log("Correct answer: {0}", ans);
+                }
+                return CurrentAnswer == ans;
             }
         }
 
@@ -27,7 +36,8 @@ namespace SteamSelector
         {
             get
             {
-                return UnlockedAchievements.Length > 0 ? 2 : 1;
+                return Convert.ToInt16(UnlockedAchievements.Length > 0) +
+                       Convert.ToInt16(Service.Friends.Count > 0) * 2 + 1;
             }
         }
 
@@ -40,15 +50,16 @@ namespace SteamSelector
         public override void Generate()
         {
             base.Generate();
+            CalculateOnSubmit = () => Service.Friends.Count;
             CurrentQuestion = "How many friends do you have on Steam?";
-            Answer = Service.Friends.Count;
             Min = 0;
             bool format = true;
-            if (UnlockedAchievements.Length > 0 && RND.Range(1, 3) == 1)
+            if (UnlockedAchievements.Length > 0 && RandomBool)
             {
+                CalculateOnSubmit = null;
                 format = false;
                 var SelectedAchievement = UnlockedAchievements[RND.Range(0, UnlockedAchievements.Length)];
-                string AchievementName = String.Format("the \"{0}\"\nachievement?", SelectedAchievement.Name);
+                string AchievementName = $"the \"{SelectedAchievement.Name}\"\nachievement?";
                 var UnlockDate = SelectedAchievement.UnlockDate;
                 switch (RND.Range(1, 6))
                 {
@@ -81,9 +92,24 @@ namespace SteamSelector
                         break;
                 }
             }
+            else switch (Service.Friends.Count > 0)
+            {
+                case true when RandomBool:
+                {
+                    SteamFriendState selected_state = (SteamFriendState)RND.Range(0, 3);
+                    CurrentQuestion =
+                        $"How many Steam friends do you have who are {(selected_state == SteamFriendState.Offline ? "offline" : "online/away")}?";
+                    CalculateOnSubmit = () => Service.Friends.Values.Count(f => CheckState(selected_state, f));
+                    break;
+                }
+                case true when RandomBool:
+                    CurrentQuestion = "How many of your friends are playing KTaNE right now?";
+                    CalculateOnSubmit = () => Service.Friends.Values.Count(f => f.IsPlayingKtane);
+                    break;
+            }
             CurrentAnswer = Min ?? 0;
             WriteQuestion(format);
-            Module.Log("Answer: {0}", Answer);
+            Module.Log("Answer: {0}", CalculateOnSubmit != null ? "*calculated on submission*" : Answer.ToString());
         }
 
         public override void Cycle(int increment)
@@ -98,6 +124,14 @@ namespace SteamSelector
             if (CurrentAnswer > Max)
                 CurrentAnswer = Min ?? (int)Max;
             WriteAnswer();
+        }
+
+        private bool CheckState(SteamFriendState SelectedState, SteamFriend Friend)
+        {
+            var state = Friend.CurrentState;
+            return SelectedState == SteamFriendState.Offline
+                ? state == SteamFriendState.Offline
+                : state == SteamFriendState.Online || state == SteamFriendState.Away;
         }
         
         public IntAnswer(TextMesh display_text, TextMesh input_text, qkSteamSelector module) :

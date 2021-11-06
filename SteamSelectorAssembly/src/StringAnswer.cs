@@ -13,7 +13,9 @@ namespace SteamSelector
         private string[] Possibles;
         private int index;
         private bool enable_avatar;
+#pragma warning disable 649
         private bool enable_extras;
+#pragma warning restore 649
         private bool write_extras;
 
         private List<int> Options = new List<int>() { 1 };
@@ -25,6 +27,8 @@ namespace SteamSelector
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
             "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
         };
+
+        private static readonly string[] Statuses = Enum.GetNames(typeof(SteamFriendState));
 
         public override int Weight
         {
@@ -64,14 +68,14 @@ namespace SteamSelector
             {
                 case 1:     //Achievement
                     var SelectedAchievement = Service.Achievements[RND.Range(0, Service.Achievements.Count)];
-                    CurrentQuestion = String.Format("Have you unlocked the\n\"{0}\"\nachievement?", SelectedAchievement.Name);
+                    CurrentQuestion = $"Have you unlocked the\n\"{SelectedAchievement.Name}\"\nachievement?";
                     Possibles = new[] { "Yes", "No" };
                     Answers = new[] { SelectedAchievement.Unlocked ? "Yes" : "No" };
                     format = false;
                     break;
                 case 2:     //Friends
                     var Friends = Service.Friends.Values.ToArray();
-                    if (RND.Range(1, 3) == 1)   //Avatar
+                    if (RandomBool)   //Avatar
                     {
                         var selected_avatar = Friends[RND.Range(0, Friends.Length)].Avatar;
                         QuestionAvatar.material.mainTexture = selected_avatar.AvatarTexture;
@@ -83,8 +87,8 @@ namespace SteamSelector
                     }
                     else    //Sort
                     {
-                        bool reverse = RND.Range(1, 3) == 1;
-                        if (RND.Range(1, 3) == 1 && Friends.Any(f => f.Level > 0))   //Level
+                        bool reverse = RandomBool;
+                        /*if (RandomBool && Friends.Any(f => f.Level > 0))   //Level
                         {
                             var no_levels = Friends.Where(f => f.Level == 0).Select(f => f.Name).ToArray();
                             Friends = reverse
@@ -118,9 +122,8 @@ namespace SteamSelector
                                     "Who is the {0} on the list of your Steam friends sorted by their Steam level? ({1})",
                                     GetStringByNum(index + 1), reverse ? "High-Low" : "Low-High");
                             Answers = new[] { Friends[index].Name };
-                        }
-                        else    //Name
-                        {
+                        }*/
+                            //Name
                             Friends = reverse
                                 ? Friends.OrderByDescending(f => f.Name).ToArray()
                                 : Friends.OrderBy(f => f.Name).ToArray();
@@ -132,13 +135,11 @@ namespace SteamSelector
                                 index = RND.Range(0, Friends.Length);
                             } while (!ModifyName(Friends[index].Name, out name));
                             int letter = RND.Range(0, name.Length);
-                            CurrentQuestion = String.Format(
-                                "What is the {0} letter/digit of the {1} person on your list of Steam friends sorted alphabetically? ({2})",
-                                GetStringByNum(letter + 1), GetStringByNum(index + 1), reverse ? "Z-A" : "A-Z");
+                            CurrentQuestion =
+                                $"What is the {GetStringByNum(letter + 1)} letter/digit of the {GetStringByNum(index + 1)} person on your list of Steam friends sorted alphabetically? ({(reverse ? "Z-A" : "A-Z")})";
                             Module.Log("Person in question: {0}", name);
                             Answers = new[] { name[letter].ToString().ToUpperInvariant() };
                         }
-                    }
                     break;
                 case 3:     //Messages
                     var messages = Service.Messages.ToList();
@@ -150,19 +151,18 @@ namespace SteamSelector
                     {
                         ind = RND.Range(0, messages.Count);
                     } while (!ModifyMessage(messages[ind], out message, out user));
-                    if (RND.Range(1, 3) == 1)
+                    if (RandomBool)
                     {
                         int letter = RND.Range(0, message.Length);
-                        CurrentQuestion = String.Format("What is the {0} letter/digit of the {1}{2}",
-                            GetStringByNum(letter + 1), ind == 0 ? "" : GetStringByNum(ind + 1) + " ",
-                            "last message you've received on Steam?");
+                        CurrentQuestion =
+                            $"What is the {GetStringByNum(letter + 1)} letter/digit of the {(ind == 0 ? "" : GetStringByNum(ind + 1) + " ")}{"last message you've received on Steam?"}";
                         Answers = new[] { message[letter].ToString().ToUpperInvariant() };
                         Possibles = Characters;
                     }
                     else
                     {
-                        CurrentQuestion = String.Format("From whom have you received your {0}last message on Steam?",
-                            ind == 0 ? "" : GetStringByNum(ind + 1) + " ");
+                        CurrentQuestion =
+                            $"From whom have you received your {(ind == 0 ? "" : GetStringByNum(ind + 1) + " ")}last message on Steam?";
                         var _Possibles = Service.Friends.Values.Select(f => f.Name).ToList();
                         if(!_Possibles.Contains(user))
                             _Possibles.Add(user);
@@ -171,12 +171,20 @@ namespace SteamSelector
                         Array.Sort(Possibles);
                     }
                     break;
+                case 4:     //Status
+                    format = false;
+                    var friends = Service.Friends.Values.ToArray();
+                    var selected_friend = friends[RND.Range(0, friends.Length)];
+                    CurrentQuestion = $"What is the current state of \n{selected_friend.Name}?";
+                    Answers = new[] { selected_friend.CurrentState.ToString() };
+                    Possibles = Statuses;
+                    break;
             }
             Current = Possibles[0];
             WriteQuestion(format);
             Module.Log(Answers.Length > 1
-                ? String.Format("Accepted answers: {0}", String.Join(", ", Answers))
-                : String.Format("Answer: {0}", Answers[0]));
+                ? $"Accepted answers: {String.Join(", ", Answers)}"
+                : $"Answer: {Answers[0]}");
         }
 
         private bool ModifyMessage(SteamMessage message, out string msg, out string user)
@@ -212,7 +220,7 @@ namespace SteamSelector
                 case 13:
                     return num + "th";
                 default: 
-                    return String.Format("{0}{1}", num, num % 10 == 1 ? "st" : num % 10 == 2 ? "nd" : num % 10 == 3 ? "rd" : "th");
+                    return $"{num}{(num % 10 == 1 ? "st" : num % 10 == 2 ? "nd" : num % 10 == 3 ? "rd" : "th")}";
             }
         }
 
@@ -236,6 +244,7 @@ namespace SteamSelector
             {
                 Options.Add(2);
                 Options.Add(2);
+                Options.Add(4);
             }
             string _;
             string __;

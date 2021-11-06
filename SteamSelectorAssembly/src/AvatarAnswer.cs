@@ -45,7 +45,7 @@ namespace SteamSelector
             PossibleAvatars = all_avatars.Distinct().ToArray();
             Answer = all_avatars[RND.Range(0, all_avatars.Length)];
             CurrentAvatar = PossibleAvatars[0];
-            CurrentQuestion = String.Format("Please select the avatar of\n{0}!", Answer.Username);
+            CurrentQuestion = $"Please select the avatar of\n{Answer.Username}!";
             WriteQuestion(false);
         }
 

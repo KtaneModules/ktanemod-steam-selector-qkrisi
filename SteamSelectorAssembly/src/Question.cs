@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
+using RND = UnityEngine.Random;
 
 namespace SteamSelector
 {
@@ -9,6 +9,7 @@ namespace SteamSelector
     {
         public bool ButtonsEnabled { get; protected set; }
         protected string[] ExtrasScreen = new string[0];
+        protected bool RandomBool => RND.Range(0, 2) == 1;
         
         private int ScreenIndex;
         private string question_cache;
