@@ -59,34 +59,34 @@ namespace SteamSelector
                 CalculateOnSubmit = null;
                 format = false;
                 var SelectedAchievement = UnlockedAchievements[RND.Range(0, UnlockedAchievements.Length)];
-                string AchievementName = $"the \"{SelectedAchievement.Name}\"\nachievement?";
+                string AchievementName = $"the \n\"{SelectedAchievement.Name}\"\nachievement?";
                 var UnlockDate = SelectedAchievement.UnlockDate;
                 switch (RND.Range(1, 6))
                 {
                     case 1:     //Year
-                        CurrentQuestion = "In which year have you unlocked\n" + AchievementName;
+                        CurrentQuestion = "In which year have you\nunlocked " + AchievementName;
                         Answer = UnlockDate.Year;
                         Min = 2015;
                         break;
                     case 2:     //Month
-                        CurrentQuestion = "In which month have you unlocked\n" + AchievementName;
+                        CurrentQuestion = "In which month have you\nunlocked " + AchievementName;
                         Answer = UnlockDate.Month;
                         Min = 1;
                         Max = 12;
                         break;
                     case 3:     //Day
-                        CurrentQuestion = "On which day have you unlocked\n" + AchievementName;
+                        CurrentQuestion = "On which day have you\nunlocked " + AchievementName;
                         Answer = UnlockDate.Day;
                         Min = 1;
                         Max = 31;
                         break;
                     case 4:     //Hour
-                        CurrentQuestion = "When have you unlocked\n" + AchievementName + " (hour)";
+                        CurrentQuestion = "When have you\nunlocked " + AchievementName + " (hour)";
                         Answer = UnlockDate.Hour;
                         Max = 23;
                         break;
                     case 5:     //Minute
-                        CurrentQuestion = "When have you unlocked\n" + AchievementName + " (minute)";
+                        CurrentQuestion = "When have you\nunlocked " + AchievementName + " (minute)";
                         Answer = UnlockDate.Minute;
                         Max = 59;
                         break;
