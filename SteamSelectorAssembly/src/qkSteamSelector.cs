@@ -10,7 +10,7 @@ public class qkSteamSelector : MonoBehaviour
     #pragma warning disable 649
     internal class SteamSelectorSettings
     {
-        public bool FastInputAnimation = true;
+        public bool FastInputAnimation = false;
     }
     
     [SerializeField] private TextMesh DisplayText;
@@ -38,6 +38,7 @@ public class qkSteamSelector : MonoBehaviour
     private int stage = 1;
     private Question CurrentQuestion;
     bool extras;
+    internal int? CurrentIncrement = null;
 
     private bool ButtonsEnabled
     {
@@ -100,6 +101,8 @@ public class qkSteamSelector : MonoBehaviour
         };
         LeftButton.OnInteract += () => PressButton(LeftButton, -1);
         RightButton.OnInteract += () => PressButton(RightButton, 1);
+        LeftButton.OnInteractEnded += () => CurrentIncrement = null;
+        RightButton.OnInteractEnded += () => CurrentIncrement = null;
         SubmitButton.OnInteract += () =>
         {
             Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, SubmitButton.transform);
@@ -163,6 +166,7 @@ public class qkSteamSelector : MonoBehaviour
     private bool PressButton(KMSelectable button, int increment)
     {
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, button.transform);
+        CurrentIncrement = increment;
         if (ButtonsEnabled)
         {
             if (extras)
@@ -204,7 +208,7 @@ public class qkSteamSelector : MonoBehaviour
                     new Dictionary<string, object>
                     {
                         {"Key", "FastInputAnimation"}, {"Text", "Fast input animation"},
-                        {"Description", "Enabling this setting makes scrolling through the answers is faster."}
+                        {"Description", "Enabling this setting makes scrolling through the answers is faster, but disables hold-cycle."}
                     },
                 }
             }

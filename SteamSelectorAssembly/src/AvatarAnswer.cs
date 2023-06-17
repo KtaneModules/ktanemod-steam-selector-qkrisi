@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections;
 using UnityEngine;
 using RND = UnityEngine.Random;
 
@@ -32,9 +33,15 @@ namespace SteamSelector
         
         protected override void WriteAnswer(bool override_wait = true)
         {
+            Module.StartCoroutine(WriteAnswerRoutine());
+        }
+        
+        private IEnumerator WriteAnswerRoutine()
+        {
             AnswerCube.material.mainTexture = CurrentAvatar.AvatarTexture;
             AnswerCube.enabled = true;
             Input.text = "";
+            yield return new WaitForSeconds(.3f);
             EnableButtons();
         }
 

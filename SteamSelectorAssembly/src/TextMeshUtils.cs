@@ -22,6 +22,7 @@ namespace SteamSelector
             if (resize)
                 display.characterSize = q.Length > 20 ? 63 : 100;
             yield return StringWriter(() => q, (s) => display.text = s, Modifier.Add, wait_time);
+            yield return new WaitForSeconds(wait_time);
             callback();
         }
         

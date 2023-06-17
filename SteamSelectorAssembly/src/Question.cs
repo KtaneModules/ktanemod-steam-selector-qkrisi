@@ -77,7 +77,9 @@ namespace SteamSelector
 
         protected void EnableButtons()
         {
-            ButtonsEnabled = true;
+            if(!Module.settings.FastInputAnimation && Module.CurrentIncrement != null)
+                Cycle((int)Module.CurrentIncrement);
+            else ButtonsEnabled = true;
         }
 
         protected void WriteQuestion(bool format)

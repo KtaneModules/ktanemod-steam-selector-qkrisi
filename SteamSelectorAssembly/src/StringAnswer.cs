@@ -56,7 +56,7 @@ namespace SteamSelector
             }
 
             Module.StartCoroutine(TextMeshUtils.WriteText(Input, Current, EnableButtons, true,
-                override_wait && Module.settings.FastInputAnimation ? 0f : TextMeshUtils.WaitTime));
+                override_wait && Module.settings.FastInputAnimation ? 0f : 0.05f));
         }
 
         public override void Generate()
